@@ -1,0 +1,113 @@
+{
+  "_note": "Hand-picked, embeddable YouTube videos (checked with YouTube's oEmbed on 2026-11-21). Edit this file on GitHub to add or remove videos. Only YouTube video ids are accepted. A human should still watch each video before it is shown to children.",
+  "items": [
+    {
+      "id": "yt-2DCC38rvK90",
+      "platform": "youtube",
+      "videoId": "2DCC38rvK90",
+      "title": "Learn Arabic Alphabet with Zakaria and Zeeko | Arabic for English Speaking Kids",
+      "channel": "Learn With Zakaria - English",
+      "age": "kids",
+      "topic": "alphabet"
+    },
+    {
+      "id": "yt-W4M4oHBGSkA",
+      "platform": "youtube",
+      "videoId": "W4M4oHBGSkA",
+      "title": "Learn Arabic Alphabet with Zakaria - تعلم الحروف العربية مع زكريا",
+      "channel": "Learn with Zakaria - تعلم مع زكريا",
+      "age": "kids",
+      "topic": "alphabet"
+    },
+    {
+      "id": "yt-fmbVBIiO1k0",
+      "platform": "youtube",
+      "videoId": "fmbVBIiO1k0",
+      "title": "Arabic Alphabet for Kids with Animals – Learn Arabic ABC with Zakaria",
+      "channel": "Learn with Zakaria - تعلم مع زكريا",
+      "age": "kids",
+      "topic": "alphabet + animals"
+    },
+    {
+      "id": "yt-je9XbgrQsIU",
+      "platform": "youtube",
+      "videoId": "je9XbgrQsIU",
+      "title": "Arabic Learning for Kids & Babies - تعليم الاطفال باللغة العربية الفصحى",
+      "channel": "Rayan Arabic TV | ريان بالعربي ",
+      "age": "kids",
+      "topic": "words for babies"
+    },
+    {
+      "id": "yt-mSXiwNpi0JQ",
+      "platform": "youtube",
+      "videoId": "mSXiwNpi0JQ",
+      "title": "Arabic Learning for Babies & Toddlers - تعلم اللغة العربية للأطفال",
+      "channel": "Kalam Kids - Learning Islam & Arabic for Kids",
+      "age": "kids",
+      "topic": "words for toddlers"
+    },
+    {
+      "id": "yt-_mVd7gmMfLQ",
+      "platform": "youtube",
+      "videoId": "_mVd7gmMfLQ",
+      "title": "Animals for kids - arabic alphabet - learn arabic - arabic alphabet letters - 17",
+      "channel": "Meryem PreSchoolers Learn",
+      "age": "kids",
+      "topic": "alphabet + animals"
+    },
+    {
+      "id": "yt-rkQ2pzGBQho",
+      "platform": "youtube",
+      "videoId": "rkQ2pzGBQho",
+      "title": "Arabic Alphabet Letter Alif(أ) With Examples For Children!",
+      "channel": "Let’s Learn Arabic LLA!هيا نتعلم اللغة العربية ",
+      "age": "kids",
+      "topic": "letter Alif"
+    },
+    {
+      "id": "yt-xQeO66oQ2TQ",
+      "platform": "youtube",
+      "videoId": "xQeO66oQ2TQ",
+      "title": "20 Arabic Words for Everyday Life - Basic Vocabulary| Arabic Learners Online",
+      "channel": "Arabic Learners Online",
+      "age": "adults",
+      "topic": "everyday words"
+    },
+    {
+      "id": "yt-_IHaDz-1DHI",
+      "platform": "youtube",
+      "videoId": "_IHaDz-1DHI",
+      "title": "100 Essential Arabic Words Every Beginner Should Know",
+      "channel": "Learn Arabic Language",
+      "age": "adults",
+      "topic": "100 essential words"
+    },
+    {
+      "id": "yt-R_uHzXR7gfo",
+      "platform": "youtube",
+      "videoId": "R_uHzXR7gfo",
+      "title": "100 Most Common Arabic Nouns for Beginners  | Start Speaking Arabic Today | Learn Arabic FAST!",
+      "channel": "Tower of Babel",
+      "age": "adults",
+      "topic": "100 common nouns"
+    },
+    {
+      "id": "yt-RFOJNSWwruI",
+      "platform": "youtube",
+      "videoId": "RFOJNSWwruI",
+      "title": "250 Arabic Words You'll Hear Every Day",
+      "channel": "Learn Arabic with Izeddine",
+      "age": "adults",
+      "topic": "250 everyday words"
+    },
+    {
+      "id": "yt-ADRr_6xTYbI",
+      "platform": "youtube",
+      "videoId": "ADRr_6xTYbI",
+      "title": "70 Everyday Arabic Phrases for Daily Conversations | Learn Arabic for Beginners",
+      "channel": "Daily Life Arabic",
+      "age": "adults",
+      "topic": "70 everyday phrases"
+    }
+  ]
+}

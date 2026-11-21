@@ -15,6 +15,8 @@ public static class DependencyInjection
         s.Configure<QfOptions>(cfg.GetSection(QfOptions.Section));
         s.Configure<QuranEncOptions>(cfg.GetSection(QuranEncOptions.Section));
         s.Configure<AsrOptions>(cfg.GetSection(AsrOptions.Section));
+        s.AddHttpClient(NewsService.ClientName, c => { c.Timeout = TimeSpan.FromSeconds(12); c.DefaultRequestHeaders.UserAgent.ParseAdd("QuranShikkha/0.1 (learning app; headlines only)"); }).AddHttpMessageHandler(() => new RetryHandler(1));
+        s.AddSingleton<NewsService>();
         s.AddHttpClient(HttpAsrTranscriber.ClientName, c => c.Timeout = TimeSpan.FromSeconds(120));
         s.AddScoped<QuranShikkha.Core.Recitation.IRecitationTranscriber, HttpAsrTranscriber>();
         s.AddDbContext<AppDbContext>(db ?? (o =>

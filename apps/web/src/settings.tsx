@@ -4,6 +4,7 @@ import { load, save } from './lib/storage';
 
 export type Theme = 'light' | 'dark' | 'auto';
 export type Layout = 'stacked' | 'side';
+export type Age = 'kids' | 'teens' | 'adults';
 
 interface Settings {
   lang: Lang;
@@ -12,6 +13,7 @@ interface Settings {
   wordMeanings: boolean;
   hoverAudio: boolean;
   layout: Layout;
+  age: Age;
   fontScale: number;
 }
 interface Ctx extends Settings {
@@ -19,17 +21,18 @@ interface Ctx extends Settings {
   t: (k: Key) => string;
 }
 
-const DEFAULTS: Settings = { lang: 'bn', theme: 'light', showPron: true, wordMeanings: true, hoverAudio: true, layout: 'stacked', fontScale: 1.15 };
+const DEFAULTS: Settings = { lang: 'bn', theme: 'light', showPron: true, wordMeanings: true, hoverAudio: true, layout: 'stacked', age: 'adults', fontScale: 1.15 };
 const C = createContext<Ctx | null>(null);
 
 /** Optional share/test links: ?lang=en&theme=dark&layout=side. Applied for this visit only (never saved). */
 function fromUrl(): Partial<Settings> {
   const q = new URLSearchParams(window.location.search);
   const out: Partial<Settings> = {};
-  const lang = q.get('lang'), theme = q.get('theme'), layout = q.get('layout');
+  const lang = q.get('lang'), theme = q.get('theme'), layout = q.get('layout'), age = q.get('age');
   if (lang === 'bn' || lang === 'en' || lang === 'ar') out.lang = lang;
   if (theme === 'light' || theme === 'dark' || theme === 'auto') out.theme = theme;
   if (layout === 'stacked' || layout === 'side') out.layout = layout;
+  if (age === 'kids' || age === 'teens' || age === 'adults') out.age = age;
   return out;
 }
 

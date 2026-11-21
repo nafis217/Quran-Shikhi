@@ -73,7 +73,7 @@ public class UserDataController(AppDbContext db) : ControllerBase
     public async Task<IActionResult> Add(AddCardRequest r, CancellationToken ct)
     {
         var uid = User.UserId()!.Value;
-        if (!System.Text.RegularExpressions.Regex.IsMatch(r.WordKey ?? "", @"^\d{1,3}:\d{1,3}:\d{1,3}$")) return Problem("Invalid wordKey.", statusCode: 400);
+        if (!System.Text.RegularExpressions.Regex.IsMatch(r.WordKey ?? "", @"^(\d{1,3}:\d{1,3}:\d{1,3}|v:[a-z0-9.\-]{1,60})$")) return Problem("Invalid wordKey.", statusCode: 400);
         if (!await db.Flashcards.AnyAsync(f => f.UserId == uid && f.WordKey == r.WordKey, ct))
         {
             db.Flashcards.Add(new FlashcardState { UserId = uid, WordKey = r.WordKey, DueAt = DateTime.UtcNow });

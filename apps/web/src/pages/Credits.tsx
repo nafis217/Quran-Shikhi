@@ -2,6 +2,7 @@ import { api } from '../lib/api';
 import { useAsync } from '../lib/useAsync';
 import { useSettings } from '../settings';
 import { Async } from '../components/States';
+import { PageHero } from '../components/PageHero';
 
 export default function Credits() {
   const { t } = useSettings();
@@ -13,7 +14,7 @@ export default function Credits() {
 
   return (
     <div>
-      <h1>{t('credits')}</h1>
+      <PageHero compact title={t('credits')} aside={<div className="hero-emoji" aria-hidden="true">🤝</div>} />
       <Async state={state} retry={retry}>
         {(c) => (
           <>

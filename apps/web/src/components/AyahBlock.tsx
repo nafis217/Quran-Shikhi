@@ -20,6 +20,8 @@ interface Props {
   notice: string;
   steps: Set<Step>;
   completed: boolean;
+  pinned: boolean;
+  onPin: () => void;
   onStep: (s: Step) => void;
   onComplete: () => void;
   onTap: (w: Word) => void;
@@ -64,6 +66,7 @@ export function AyahBlock(p: Props) {
           {STEPS.map((s) => <i key={s} data-done={p.steps.has(s) || undefined} />)}
         </span>
         <span className="ayah-actions">
+          <button className="btn small ghost pin" aria-pressed={p.pinned} onClick={p.onPin} title={p.pinned ? t('unpin') : t('pin')} aria-label={p.pinned ? t('unpin') : t('pin')}>📌</button>
           <button className="btn small" onClick={() => void playAyah()}>▶ {t('playAyah')}</button>
           <button className="btn small" onClick={p.onDetails}>📖 {t('details')}</button>
         </span>

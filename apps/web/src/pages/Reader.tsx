@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { surahName } from '@quran-shikkha/learning-core';
+import { isBookmarked, surahName } from '@quran-shikkha/learning-core';
 import { api, authed } from '../lib/api';
-import { load, save } from '../lib/storage';
+import { doneFor, readingStore, useReading } from '../lib/readingStore';
 import { useAsync } from '../lib/useAsync';
 import { useWordInteraction } from '../lib/useWordInteraction';
 import { useSettings } from '../settings';
@@ -10,8 +10,11 @@ import { AyahBlock, type Step } from '../components/AyahBlock';
 import { DetailsSheet } from '../components/DetailsSheet';
 import { Async } from '../components/States';
 import { SoundHint } from '../components/SoundHint';
+import { PageHero } from '../components/PageHero';
+import { Ring } from '../components/Ring';
 
 const PAGE = 15; // ayahs per page: keeps Al-Baqarah (286 ayahs) fast
+const pageOf = (ayah: number) => Math.max(0, Math.floor((ayah - 1) / PAGE));
 
 export default function Reader() {
   const { n } = useParams();
@@ -19,10 +22,12 @@ export default function Reader() {
   const surah = Number(n);
   const { t, lang } = useSettings();
   const wi = useWordInteraction();
+  const { reading } = useReading();
   const [details, setDetails] = useState<number | null>(null);
   const [steps, setSteps] = useState<Record<string, Set<Step>>>({});
-  const [done, setDone] = useState<number[]>(() => load<number[]>(`qs.done.${surah}`, []));
-  const [page, setPage] = useState(() => Math.max(0, Math.floor((Number(params.get('from') ?? 1) - 1) / PAGE)));
+  const from = Number(params.get('from') ?? 0);
+  const [page, setPage] = useState(() => pageOf(from || 1));
+  const done = doneFor(surah);
 
   const [state, retry] = useAsync(async () => {
     const [ayahs, surahs, lessons] = await Promise.all([
@@ -36,36 +41,32 @@ export default function Reader() {
   }, [surah]);
 
   // The meaning of every ayah in the reader's language. Optional: if it fails the Arabic still shows.
-  const [tr] = useAsync(async () => {
-    const r = await api.GET('/api/v1/surahs/{n}/translations', { params: { path: { n: surah }, query: { lang } } });
-    return r.data ?? null;
-  }, [surah, lang]);
+  const [tr] = useAsync(async () => (await api.GET('/api/v1/surahs/{n}/translations', { params: { path: { n: surah }, query: { lang } } })).data ?? null, [surah, lang]);
   const trMap = useMemo(() => new Map(tr.status === 'ready' && tr.data ? tr.data.ayahs.map((a) => [a.ayah, a.text]) : []), [tr]);
   const trSource = tr.status === 'ready' ? tr.data : null;
 
-  useEffect(() => {
-    setDone(load<number[]>(`qs.done.${surah}`, []));
-    wi.clear(); setSteps({}); setDetails(null);
-    setPage(Math.max(0, Math.floor((Number(params.get('from') ?? 1) - 1) / PAGE)));
-  }, [surah]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { wi.clear(); setSteps({}); setDetails(null); setPage(pageOf(from || 1)); }, [surah]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // arriving from a juz link (?from=142): bring that ayah into view once the page is drawn
+  // arriving from a juz / plan / continue link (?from=142): bring that ayah into view once the page is drawn
   useEffect(() => {
-    const from = Number(params.get('from'));
     if (state.status === 'ready' && from > 1) setTimeout(() => document.getElementById(`a${from}`)?.scrollIntoView({ block: 'start' }), 60);
   }, [state.status, surah]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const addStep = useCallback((key: string, s: Step) => setSteps((o) => (o[key]?.has(s) ? o : { ...o, [key]: new Set([...(o[key] ?? []), s]) })), []);
+  /** Doing anything with an ayah (listen, tap, break down) also moves "where I stopped" to it. */
+  const addStep = useCallback((key: string, ayah: number, s: Step) => {
+    if (s !== 'read') readingStore.setLast(surah, ayah); // "I read it" moves the place forward itself (markRead); it must never pull it back
+    setSteps((o) => (o[key]?.has(s) ? o : { ...o, [key]: new Set([...(o[key] ?? []), s]) }));
+  }, [surah]);
 
-  const complete = (ayah: number, lessonId: number | null) => {
-    const next = Array.from(new Set([...done, ayah]));
-    setDone(next);
-    save(`qs.done.${surah}`, next);
+  const markRead = (ayah: number, lessonId: number | null) => {
+    readingStore.markRead(surah, ayah);
     if (lessonId !== null)
-      void authed(() => api.PUT('/api/v1/progress/{lessonId}', { params: { path: { lessonId } }, body: { completedItems: next.length } })).catch(() => undefined);
+      void authed(() => api.PUT('/api/v1/progress/{lessonId}', { params: { path: { lessonId } }, body: { completedItems: doneFor(surah).length } })).catch(() => undefined);
   };
 
   if (!Number.isInteger(surah) || surah < 1 || surah > 114) return <p className="state">{t('empty')}</p>;
+  const last = reading.last;
+  const showResume = last && last.surah === surah && last.ayah > 1 && !from;
 
   return (
     <div>
@@ -73,7 +74,7 @@ export default function Reader() {
         {({ ayahs, chapter, lessonId }) => {
           const pages = Math.ceil(ayahs.length / PAGE);
           const slice = ayahs.slice(page * PAGE, page * PAGE + PAGE);
-          const go = (p: number) => { setPage(p); wi.clear(); window.scrollTo({ top: 0 }); };
+          const go = (p: number) => { setPage(p); wi.clear(); readingStore.setLast(surah, p * PAGE + 1); window.scrollTo({ top: 0 }); };
           const pager = pages > 1 && (
             <nav className="pager" aria-label={t('page')}>
               <button className="btn small" disabled={page === 0} onClick={() => go(page - 1)}>← {t('prev')}</button>
@@ -83,15 +84,25 @@ export default function Reader() {
           );
           return (
             <>
-              <div className="surah-head">
-                <h1>{lang === 'ar' && chapter ? chapter.nameArabic : `${t('surah')} ${chapter ? surahName(lang, chapter) : surah}`}</h1>
-                {lang !== 'ar' && <span className="ar" lang="ar">{chapter?.nameArabic}</span>}
-              </div>
-              <div className="reader-meta">
-                <span className="meta" aria-live="polite">{t('progress')}: {done.length} / {ayahs.length}</span>
-                <span className="progress-bar" aria-hidden="true"><i style={{ width: `${(100 * done.length) / Math.max(1, ayahs.length)}%` }} /></span>
-                <Link className="btn small" to={`/surah/${surah}/tafsir`}>📜 {t('surahTafsir')}</Link>
-              </div>
+              <PageHero
+                overline={`${t('surah')} ${surah}`}
+                title={lang === 'ar' && chapter ? chapter.nameArabic : chapter ? surahName(lang, chapter) : String(surah)}
+                sub={<span aria-live="polite">{t('progress')}: {done.length} / {ayahs.length} {t('ayahsCount')}</span>}
+                aside={(
+                  <>
+                    <Ring value={done.length / Math.max(1, ayahs.length)} size={104} stroke={9}><b>{Math.round((100 * done.length) / Math.max(1, ayahs.length))}%</b></Ring>
+                    {lang !== 'ar' && <p className="hero-name-ar ar" lang="ar">{chapter?.nameArabic}</p>}
+                  </>
+                )}
+              >
+                <div className="hero-links"><Link className="btn-hero ghost" to={`/surah/${surah}/tafsir`}>📜 {t('surahTafsir')}</Link></div>
+              </PageHero>
+              {showResume && (
+                <div className="resume">
+                  <span>{t('continueFrom')}: <strong>{t('ayah')} {last!.ayah}</strong></span>
+                  <button className="btn small primary" onClick={() => { setPage(pageOf(last!.ayah)); setTimeout(() => document.getElementById(`a${last!.ayah}`)?.scrollIntoView({ block: 'start' }), 80); }}>{t('continueReading')} →</button>
+                </div>
+              )}
               <p className="hint">{t('tapHint')}</p>
               <p className="hint">{t('disclaimer')}</p>
               {trSource && <p className="src">{t('meaningLang')}: {trSource.source}{trSource.version ? ` · ${t('version')} ${trSource.version}` : ''}</p>}
@@ -106,14 +117,16 @@ export default function Reader() {
                   notice={wi.notice}
                   steps={steps[a.key] ?? new Set()}
                   completed={done.includes(a.ayah)}
-                  onStep={(s) => addStep(a.key, s)}
-                  onComplete={() => complete(a.ayah, lessonId)}
+                  pinned={isBookmarked(reading, surah, a.ayah)}
+                  onPin={() => readingStore.togglePin(surah, a.ayah)}
+                  onStep={(s) => addStep(a.key, a.ayah, s)}
+                  onComplete={() => markRead(a.ayah, lessonId)}
                   onTap={wi.tap}
                   onBreak={(w) => void wi.breakDown(w)}
                   onListen={(w) => void wi.listen(w)}
                   onHover={wi.hover}
                   onClose={wi.clear}
-                  onDetails={() => setDetails(a.ayah)}
+                  onDetails={() => { readingStore.setLast(surah, a.ayah); setDetails(a.ayah); }}
                 />
               ))}
               {pager}

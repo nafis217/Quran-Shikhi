@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Content\media.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\QuranShikkha.Core\QuranShikkha.Core.csproj" />
     <ProjectReference Include="..\QuranShikkha.Infrastructure\QuranShikkha.Infrastructure.csproj" />
   </ItemGroup>

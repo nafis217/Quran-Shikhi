@@ -6,6 +6,9 @@ export type Nav =
   | { name: 'tafsir'; surah: number }
   | { name: 'frequent' }
   | { name: 'familiar'; id: number }
+  | { name: 'plan' }
+  | { name: 'learn'; cat?: string }
+  | { name: 'watch' }
   | { name: 'flashcards' }
   | { name: 'credits' }
   | { name: 'practice'; mode?: PracticeMode };

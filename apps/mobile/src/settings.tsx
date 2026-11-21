@@ -3,7 +3,8 @@ import { useColorScheme } from 'react-native';
 import { tr, type Key, type Lang } from '@quran-shikkha/learning-core';
 import { load, save } from './storage';
 
-interface S { lang: Lang; showPron: boolean; wordMeanings: boolean; fontScale: number; theme: 'light' | 'dark' | 'auto' }
+export type Age = 'kids' | 'teens' | 'adults';
+interface S { lang: Lang; showPron: boolean; wordMeanings: boolean; fontScale: number; theme: 'light' | 'dark' | 'auto'; age: Age }
 interface Ctx extends S { set: (p: Partial<S>) => void; t: (k: Key) => string; colors: Colors }
 export interface Colors { surface2: string; bg: string; surface: string; text: string; muted: string; line: string; accent: string; onAccent: string; hl: string; onHl: string; warn: string; foreign: string; throat: string; heavy: string }
 
@@ -13,7 +14,7 @@ const dark: Colors = { surface2: '#1a2b3b', bg: '#0d1620', surface: '#14212e', t
 const C = createContext<Ctx | null>(null);
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const scheme = useColorScheme();
-  const [s, setS] = useState<S>({ lang: 'bn', showPron: true, wordMeanings: true, fontScale: 1.15, theme: 'light' });
+  const [s, setS] = useState<S>({ lang: 'bn', showPron: true, wordMeanings: true, fontScale: 1.15, theme: 'light', age: 'adults' });
   useEffect(() => { void load<Partial<S>>('qs.settings', {}).then((p) => setS((o) => ({ ...o, ...p }))); }, []);
   const set = useCallback((p: Partial<S>) => setS((o) => { const n = { ...o, ...p }; void save('qs.settings', n); return n; }), []);
   const value = useMemo<Ctx>(() => ({ ...s, set, t: (k) => tr(s.lang, k), colors: (s.theme === 'auto' ? scheme === 'dark' : s.theme === 'dark') ? dark : light }), [s, set, scheme]);

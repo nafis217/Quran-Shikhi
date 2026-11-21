@@ -6,7 +6,7 @@ import { Btn, T } from './Ui';
 
 /** All preferences in one sheet, so the top bar stays clean. */
 export function SettingsSheet() {
-  const { t, lang, theme, showPron, wordMeanings, fontScale, set, colors: c } = useSettings();
+  const { t, lang, theme, showPron, wordMeanings, fontScale, age, set, colors: c } = useSettings();
   const [open, setOpen] = useState(false);
   const row = (label: string, value: boolean, onChange: (v: boolean) => void) => (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: 48 }}>
@@ -27,6 +27,12 @@ export function SettingsSheet() {
             <T bold style={{ color: c.muted, fontSize: 13 }}>{t('language')}</T>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
               {LANGS.map((l) => <Btn key={l.code} kind={lang === l.code ? 'primary' : 'normal'} label={l.label} onPress={() => set({ lang: l.code })} />)}
+            </View>
+            <T bold style={{ color: c.muted, fontSize: 13 }}>{t('ageGroup')}</T>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              <Btn kind={age === 'kids' ? 'primary' : 'normal'} label={`🧒 ${t('ageKids')}`} onPress={() => set({ age: 'kids' })} />
+              <Btn kind={age === 'teens' ? 'primary' : 'normal'} label={t('ageTeens')} onPress={() => set({ age: 'teens' })} />
+              <Btn kind={age === 'adults' ? 'primary' : 'normal'} label={t('ageAdults')} onPress={() => set({ age: 'adults' })} />
             </View>
             <T bold style={{ color: c.muted, fontSize: 13 }}>{t('theme')}</T>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>

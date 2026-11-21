@@ -11,3 +11,6 @@ export * from './text';
 export * from './pronText';
 export * from './practice/explain';
 export * from './juz';
+export * from './vocab';
+export * from './reading';
+export * from './plan';

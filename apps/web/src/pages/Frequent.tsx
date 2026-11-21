@@ -1,17 +1,24 @@
+import { useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { pickByLang, pronScript, pronText } from '@quran-shikkha/learning-core';
 import type { Word } from '@quran-shikkha/api-client';
-import { api } from '../lib/api';
+import { api, authed } from '../lib/api';
 import { pron } from '../lib/pron';
 import { useAsync } from '../lib/useAsync';
 import { useWordInteraction } from '../lib/useWordInteraction';
 import { useSettings } from '../settings';
 import { WordChip } from '../components/WordChip';
 import { Async, Empty } from '../components/States';
+import { PageHero } from '../components/PageHero';
 
 /** The ~300 most common words of the whole Quran, each with its Bangla and English meaning. Coverage is computed from the data. */
 export default function Frequent() {
   const { t, lang, showPron } = useSettings();
   const wi = useWordInteraction();
+  const [params] = useSearchParams();
+  const from = Number(params.get('from')) || 0, to = Number(params.get('to')) || 0;
+  const ranged = from > 0 && to >= from;
+  const [added, setAdded] = useState(0);
   const [state, retry] = useAsync(async () => {
     const r = await api.GET('/api/v1/tracks/frequent', { params: { query: { size: 300 } } });
     if (!r.data) throw new Error('track');
@@ -20,10 +27,23 @@ export default function Frequent() {
 
   return (
     <div>
-      <h1>{t('frequent')}</h1>
+      <PageHero compact overline={t('frequent')} title={t('frequent')} sub={t('frequentDesc')} aside={<div className="hero-emoji" aria-hidden="true">🔤</div>} />
       <Async state={state} retry={retry}>
-        {(d) => d.words.length === 0 ? <Empty /> : (
+        {(full) => {
+          const d = ranged ? { ...full, words: full.words.filter((w) => w.rank >= from && w.rank <= to) } : full;
+          return d.words.length === 0 ? <Empty /> : (
           <>
+            {ranged && (
+              <div className="resume">
+                <span><strong>{t('taskWords')} #{from}–{to}</strong></span>
+                <span className="row" style={{ margin: 0 }}>
+                  <button className="btn small primary" disabled={added === d.words.length} onClick={() => { void (async () => { let n = 0; for (const w of d.words) { try { const r = await authed(() => api.POST('/api/v1/flashcards', { body: { wordKey: w.exampleKey } })); if (r.response.ok) n++; } catch { /* keep going */ } } setAdded(n); })(); }}>
+                    {added ? `✓ ${added}` : '＋ ' + t('addAllCards')}
+                  </button>
+                  <Link className="btn small ghost" to="/frequent">{t('frequent')}</Link>
+                </span>
+              </div>
+            )}
             <p className="coverage" aria-live="polite">
               {d.words.length} {t('wordsCount')} · {t('coverage')} <strong>{d.coveragePercent}%</strong> {t('coverageOf')}
               <span className="meta"> ({d.totalWordTokens.toLocaleString()} · {d.distinctWords.toLocaleString()})</span>
@@ -54,7 +74,8 @@ export default function Frequent() {
               })}
             </ol>
           </>
-        )}
+          );
+        }}
       </Async>
     </div>
   );

@@ -89,3 +89,16 @@ These are used only while no Quran Foundation (QF) credentials are configured. T
 | Reason for revelation | Al-Wahidi, *Asbab al-Nuzul* (English translation), same service | ❓ Classical author, but the English translation's copyright is not verified. Shown with attribution and labelled "not scholar-reviewed". Entries exist only for ayahs where Al-Wahidi recorded a reason. |
 
 Known data glitch handled in code: the source labels the verse-number mark "١٨١" in 2:181 as a word; tokens with no Arabic letter are now treated as verse markers.
+
+## 11. Daily Arabic, videos and news (added)
+| Item | Where it comes from | Status |
+|---|---|---|
+| Everyday words, phrases, meanings | Written by hand (AI assistant), see `docs/vocabulary-review.md` | ✅ ours, but ❓ **not reviewed by a native speaker** |
+| Pictures | Unicode emoji, drawn by the user's device font | ✅ no files shipped. |
+| Spoken everyday words | The device's own text-to-speech voice | ✅ no audio shipped; never used for the Quran |
+| Videos | YouTube videos **embedded with YouTube's own player** (youtube-nocookie, click-to-play). The list is `backend/src/QuranShikkha.Api/Content/media.json`. | ⚠️ We do not copy, download or re-host any video. Embedding follows YouTube's terms. Videos belong to their creators and can be removed by them. A human should watch each video before it is shown to children. |
+| Arabic news headlines | The public RSS feeds of BBC Arabic, Al Jazeera and France 24 Arabic | ⚠️ Only the headline, date and a link are shown (full stories stay on the outlets' sites). Check each outlet's feed terms before a commercial release. Sky News Arabia blocks automated access and is not used. |
+| Meaning hints for news words | Our daily-word list and the 1,000 most common Quran words | ✅ ours / the Quran sources above; shown as "likely meaning". |
+| "Translate" button | A link to Google Translate with the headline in the URL; the user clicks it | ⚠️ sends that headline text to Google when clicked. |
+
+**YouTube, Facebook and Instagram:** their content cannot be copied or collected automatically (their terms forbid it, and the content belongs to its creators). The app therefore only *links to* or *embeds* chosen YouTube videos. Facebook and Instagram are not used.

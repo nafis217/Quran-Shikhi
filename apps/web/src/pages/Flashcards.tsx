@@ -1,16 +1,21 @@
 import { useState } from 'react';
 import type { Word } from '@quran-shikkha/api-client';
-import { pickByLang, pronScript, pronText } from '@quran-shikkha/learning-core';
+import { meaningOf, pickByLang, pronScript, pronText, vocabById, type VocabWord } from '@quran-shikkha/learning-core';
 import { api, authed } from '../lib/api';
 import { playUrl, wordAudioUrl } from '../lib/audio';
 import { pron } from '../lib/pron';
+import { speakArabic } from '../lib/speech';
+import { vocabPron } from '../lib/vocabPron';
 import { useAsync } from '../lib/useAsync';
 import { useSettings } from '../settings';
 import { Async, Empty } from '../components/States';
+import { PageHero } from '../components/PageHero';
 
-interface Card { wordKey: string; word: Word | null }
+/** A card is either a Quran word (key "2:255:1") or a daily word (key "v:animals.cat"). */
+interface Card { wordKey: string; word: Word | null; vocab: VocabWord | null }
 
 async function findWord(key: string): Promise<Word | null> {
+  if (key.startsWith('v:')) return null;
   const [s, a] = key.split(':').map(Number);
   if (!s || !a) return null;
   const r = await api.GET('/api/v1/surahs/{n}/ayahs', { params: { path: { n: s } } });
@@ -27,8 +32,8 @@ export default function Flashcards() {
   const [state, retry] = useAsync(async () => {
     const r = await authed(() => api.GET('/api/v1/flashcards/due'));
     const rows = (r.data ?? []) as { wordKey: string }[];
-    const cards: Card[] = await Promise.all(rows.map(async (c) => ({ wordKey: c.wordKey, word: await findWord(c.wordKey) })));
-    return cards.filter((c) => c.word);
+    const cards: Card[] = await Promise.all(rows.map(async (c) => ({ wordKey: c.wordKey, word: await findWord(c.wordKey), vocab: c.wordKey.startsWith('v:') ? vocabById(c.wordKey.slice(2)) ?? null : null })));
+    return cards.filter((c) => c.word || c.vocab);
   }, []);
 
   const grade = async (card: Card, quality: number) => {
@@ -42,32 +47,31 @@ export default function Flashcards() {
 
   return (
     <div>
-      <h1>{t('dueCards')}</h1>
+      <PageHero compact overline={t('flashcards')} title={t('dueCards')} aside={<div className="hero-emoji" aria-hidden="true">🗂️</div>} />
       <Async state={state} retry={retry}>
         {(cards) => {
           const c = cards[idx];
-          if (!c || !c.word) return <Empty>{t('noDue')}</Empty>;
-          const w = c.word;
-          const p = pron(w.arabicText);
-          const meaning = pickByLang(lang, w.meaningBn, w.meaningEn);
-          const audio = wordAudioUrl(w.audioPath);
+          if (!c) return <Empty>{t('noDue')}</Empty>;
+          const v = c.vocab, w = c.word;
+          const arabic = v ? v.ar : w!.arabicText;
+          const guide = v ? vocabPron(v, lang) : pronText(pron(w!.arabicText), lang);
+          const meaning = v ? meaningOf(v, lang) : pickByLang(lang, w!.meaningBn, w!.meaningEn);
+          const audio = w ? wordAudioUrl(w.audioPath) : null;
+          const grades: [number, string][] = [[1, t('again')], [3, t('hard')], [4, t('good')], [5, t('easy')]];
           return (
             <section className="flash" aria-label={`${idx + 1} / ${cards.length}`}>
               <p className="meta">{idx + 1} / {cards.length}</p>
-              <div className="ar flash-ar" lang="ar" dir="rtl">{w.arabicText}</div>
+              {v && v.visual && <div className="pic-q" role="img" aria-label={v.en}>{v.emoji}</div>}
+              <div className="ar flash-ar" lang="ar" dir="rtl">{arabic}</div>
               {audio && <button className="btn" onClick={() => void playUrl(audio)}>🔊 {t('listen')}</button>}
+              {v && <button className="btn" onClick={() => speakArabic(v.ar)}>🔊 {t('speak')}</button>}
               {!shown ? (
                 <button className="btn primary" onClick={() => setShown(true)}>{t('showAnswer')}</button>
               ) : (
                 <>
-                  <p className="chip-pron" lang={pronScript(lang) === 'bn' ? 'bn' : 'en'}>{pronText(p, lang)}</p>
+                  <p className="chip-pron" lang={pronScript(lang) === 'bn' ? 'bn' : 'en'}>{guide}</p>
                   <p className="chip-meaning" lang={lang}>{meaning ?? t('noMeaning')}</p>
-                  <div className="row">
-                    <button className="btn" onClick={() => void grade(c, 1)}>{t('again')}</button>
-                    <button className="btn" onClick={() => void grade(c, 3)}>{t('hard')}</button>
-                    <button className="btn" onClick={() => void grade(c, 4)}>{t('good')}</button>
-                    <button className="btn" onClick={() => void grade(c, 5)}>{t('easy')}</button>
-                  </div>
+                  <div className="row">{grades.map(([q, label]) => <button key={q} className="btn" onClick={() => void grade(c, q)}>{label}</button>)}</div>
                 </>
               )}
               {saveErr && <p className="notice" role="alert">{t('errorBody')}</p>}

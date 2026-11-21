@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import type { Word } from '@quran-shikkha/api-client';
-import { LANGS, dirOf, pickByLang, friendlyLatin, pronScript, pronText, surahName } from '@quran-shikkha/learning-core';
+import { dirOf, friendlyLatin, isBookmarked, LANGS, pickByLang, pronScript, pronText, surahName } from '@quran-shikkha/learning-core';
 import { api, authed } from '../api';
 import { deleteSurah, downloadSurah, listDownloads } from '../offline';
 import { pron } from '../pron';
-import { load, save } from '../storage';
+import { readingStore, useReading } from '../readingStore';
 import { useAsync } from '../useAsync';
 import { useSettings } from '../settings';
 import { useWordInteraction } from '../useWordInteraction';
@@ -43,7 +43,8 @@ export default function Reader({ surah, from, open }: { surah: number; from?: nu
   const { t, lang, wordMeanings, colors: c } = useSettings();
   const wi = useWordInteraction(surah);
   const [details, setDetails] = useState<number | null>(null);
-  const [done, setDone] = useState<number[]>([]);
+  const { reading } = useReading();
+  const done = readingStore.doneFor(surah);
   const [readMode, setReadMode] = useState<Record<number, boolean>>({});
   const [page, setPage] = useState(Math.max(0, Math.floor(((from ?? 1) - 1) / PAGE)));
   const [dl, setDl] = useState<{ state: 'none' | 'busy' | 'done' | 'error'; done: number; total: number }>({ state: 'none', done: 0, total: 0 });
@@ -62,14 +63,12 @@ export default function Reader({ surah, from, open }: { surah: number; from?: nu
   const trMap = useMemo(() => new Map(tr.status === 'ready' && tr.data ? tr.data.ayahs.map((a) => [a.ayah, a.text]) : []), [tr]);
 
   useEffect(() => {
-    void load<number[]>(`qs.done.${surah}`, []).then(setDone);
     void listDownloads().then((l) => l.some((d) => d.surah === surah) && setDl({ state: 'done', done: 0, total: 0 }));
   }, [surah]);
 
   const markDone = (ayah: number, lessonId: number | null) => {
-    const next = Array.from(new Set([...done, ayah]));
-    setDone(next); void save(`qs.done.${surah}`, next);
-    if (lessonId !== null) void authed(() => api.PUT('/api/v1/progress/{lessonId}', { params: { path: { lessonId } }, body: { completedItems: next.length } })).catch(() => undefined);
+    readingStore.markRead(surah, ayah);
+    if (lessonId !== null) void authed(() => api.PUT('/api/v1/progress/{lessonId}', { params: { path: { lessonId } }, body: { completedItems: readingStore.doneFor(surah).length } })).catch(() => undefined);
   };
 
   const startDownload = async () => {
@@ -86,7 +85,7 @@ export default function Reader({ surah, from, open }: { surah: number; from?: nu
         {({ ayahs, chapter, lessonId }) => {
           const pages = Math.ceil(ayahs.length / PAGE);
           const slice = ayahs.slice(page * PAGE, page * PAGE + PAGE);
-          const go = (p: number) => { setPage(p); wi.clear(); };
+          const go = (p: number) => { setPage(p); wi.clear(); readingStore.setLast(surah, p * PAGE + 1); };
           const pager = pages > 1 && (
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
               <Btn label={`← ${t('prev')}`} disabled={page === 0} onPress={() => go(page - 1)} />
@@ -124,7 +123,10 @@ export default function Reader({ surah, from, open }: { surah: number; from?: nu
                   <Card key={a.key}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
                       <View style={{ width: 34, height: 34, borderRadius: 17, backgroundColor: c.surface2, alignItems: 'center', justifyContent: 'center' }}><T bold style={{ color: c.accent, fontSize: 14 }}>{done.includes(a.ayah) ? '✓' : a.ayah}</T></View>
-                      <Btn label={`📖 ${t('details')}`} onPress={() => setDetails(a.ayah)} />
+                      <View style={{ flexDirection: 'row' }}>
+                        <Btn kind={isBookmarked(reading, surah, a.ayah) ? 'primary' : 'ghost'} label="📌" a11y={isBookmarked(reading, surah, a.ayah) ? t('unpin') : t('pin')} onPress={() => readingStore.togglePin(surah, a.ayah)} />
+                        <Btn label={`📖 ${t('details')}`} onPress={() => { readingStore.setLast(surah, a.ayah); setDetails(a.ayah); }} />
+                      </View>
                     </View>
 
                     <View style={{ backgroundColor: c.surface2, borderRadius: 12, paddingTop: 22, paddingBottom: 8, paddingHorizontal: 8 }}>
@@ -132,7 +134,7 @@ export default function Reader({ surah, from, open }: { surah: number; from?: nu
                       <View style={{ flexDirection: 'row-reverse', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
                         {words.map((w) => (
                           <WordView key={w.key} word={w} selected={wi.selected?.key === w.key} activeSyllable={wi.bd?.key === w.key ? wi.bd.index : -1}
-                            hidePron={rm} showGloss={wordMeanings && !rm} onSingle={wi.tap} onDouble={(x) => void wi.breakDown(x)} />
+                            hidePron={rm} showGloss={wordMeanings && !rm} onSingle={(x) => { readingStore.setLast(surah, a.ayah); wi.tap(x); }} onDouble={(x) => { readingStore.setLast(surah, a.ayah); void wi.breakDown(x); }} />
                         ))}
                       </View>
                     </View>

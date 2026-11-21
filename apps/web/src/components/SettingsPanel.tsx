@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { LANGS, type Lang } from '@quran-shikkha/learning-core';
-import { useSettings, type Layout, type Theme } from '../settings';
+import { useSettings, type Age, type Layout, type Theme } from '../settings';
 
 /** One place for every preference, instead of a crowded header. */
 export function SettingsPanel() {
-  const { t, lang, theme, showPron, wordMeanings, hoverAudio, layout, fontScale, set } = useSettings();
+  const { t, lang, theme, showPron, wordMeanings, hoverAudio, layout, age, fontScale, set } = useSettings();
   const [open, setOpen] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
 
@@ -18,6 +18,7 @@ export function SettingsPanel() {
   }, [open]);
 
   const themes: [Theme, string][] = [['light', '☀ ' + t('themeLight')], ['dark', '🌙 ' + t('themeDark')], ['auto', t('themeAuto')]];
+  const ages: [Age, string][] = [['kids', '🧒 ' + t('ageKids')], ['teens', t('ageTeens')], ['adults', t('ageAdults')]];
   const layouts: [Layout, string][] = [['stacked', t('layoutStacked')], ['side', t('layoutSide')]];
 
   return (
@@ -38,6 +39,13 @@ export function SettingsPanel() {
             <span className="label">{t('theme')}</span>
             <div className="seg" role="group" aria-label={t('theme')}>
               {themes.map(([v, label]) => <button key={v} aria-pressed={theme === v} onClick={() => set({ theme: v })}>{label}</button>)}
+            </div>
+          </div>
+
+          <div className="field">
+            <span className="label">{t('ageGroup')}</span>
+            <div className="seg" role="group" aria-label={t('ageGroup')}>
+              {ages.map(([v, label]) => <button key={v} aria-pressed={age === v} onClick={() => set({ age: v })}>{label}</button>)}
             </div>
           </div>
 

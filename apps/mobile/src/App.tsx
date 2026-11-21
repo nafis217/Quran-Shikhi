@@ -16,6 +16,10 @@ import Flashcards from './screens/Flashcards';
 import Credits from './screens/Credits';
 import Familiar from './screens/Familiar';
 import Practice from './screens/Practice';
+import Learn from './screens/Learn';
+import PlanScreen from './screens/PlanScreen';
+import { hydrate } from './readingStore';
+import Watch from './screens/Watch';
 
 function Shell() {
   const { t, lang, colors: c } = useSettings();
@@ -24,6 +28,7 @@ function Shell() {
   const push = (s: Nav) => setStack((o) => [...o, s]);
   const goTab = (s: Nav) => setStack([{ name: 'home' }, ...(s.name === 'home' ? [] : [s])]);
 
+  useEffect(() => { void hydrate(); }, []);
   useEffect(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => { if (stack.length > 1) { setStack((o) => o.slice(0, -1)); return true; } return false; });
     return () => sub.remove();
@@ -48,13 +53,16 @@ function Shell() {
         {screen.name === 'flashcards' && <Flashcards />}
         {screen.name === 'credits' && <Credits />}
         {screen.name === 'practice' && <Practice />}
+        {screen.name === 'learn' && <Learn key={screen.cat ?? 'all'} cat={screen.cat} open={push} />}
+        {screen.name === 'watch' && <Watch />}
+        {screen.name === 'plan' && <PlanScreen open={push} />}
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around', backgroundColor: c.surface, borderTopWidth: 1, borderTopColor: c.line }}>
         <Btn kind="ghost" label={t('home')} onPress={() => goTab({ name: 'home' })} />
+        <Btn kind="ghost" label={t('myPlan')} onPress={() => goTab({ name: 'plan' })} />
+        <Btn kind="ghost" label={t('dailyArabic')} onPress={() => goTab({ name: 'learn' })} />
         <Btn kind="ghost" label={t('practice')} onPress={() => goTab({ name: 'practice' })} />
-        <Btn kind="ghost" label={t('navWords')} onPress={() => goTab({ name: 'frequent' })} />
         <Btn kind="ghost" label={t('flashcards')} onPress={() => goTab({ name: 'flashcards' })} />
-        <Btn kind="ghost" label={t('credits')} onPress={() => goTab({ name: 'credits' })} />
       </View>
     </SafeAreaView>
   );

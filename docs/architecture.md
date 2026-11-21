@@ -112,3 +112,12 @@ Writing feedback (heatmap and hints) and a reading check (speech-to-text compare
 - **Mixed directions.** Each ayah has two zones: Arabic (right-to-left, tinted, label at the right) and the meaning (left-to-right, or right-to-left for Arabic UI, label at its own start). A word's meaning sits directly under the word, so the order of Arabic words never has to be matched to a left-to-right line by eye. Optional side-by-side layout (Arabic right, meaning left) like a bilingual book.
 - **Long surahs** are paged (15 ayahs per page) so Al-Baqarah (286 ayahs) stays fast.
 - **Header** is the brand, five tabs and one Settings panel (language, theme, layout, text size, pronunciation guide, word meanings, hover audio).
+
+## 11. Daily Arabic, games, Watch & Read (added)
+- **Learn:** 212 everyday words in 14 categories (`learning-core/src/vocab`). Pictures are emoji; speech is the device voice. Games: picture quiz, listen-and-pick, memory match, spell-it (letter tiles), meaning quiz, a 60-second speed round (teens/adults). Stars and best score stay on the device. Words can be added to the SM-2 flashcards (key `v:<id>`).
+- **Age group** (Settings): kids see games first and a parent note on videos; teens/adults see phrases and categories first and the speed round.
+- **Watch & Read:** `GET /api/v1/media?age=kids|adults` serves the hand-picked embeddable YouTube list (validated: only plain 11-character video ids). `GET /api/v1/news?source=bbc|aljazeera|france24` fetches headlines from three allow-listed RSS feeds (size-capped, DTD-refusing XML parser, 15-minute cache, last good copy if a feed is down). The endpoint cannot fetch any other URL.
+- **News as a lesson:** each headline is split into words; known words are underlined and tapping shows a "likely meaning" from our word lists. It is a hint, not a dictionary (it matches only common words).
+
+## 12. Saving your place, progress and the reading plan (added)
+Pure logic in `packages/learning-core/src/reading.ts` and `plan.ts` (93 tests); stored per device by `apps/web/src/lib/readingStore.ts` and `apps/mobile/src/readingStore.ts`. Home now answers "what do I do now?": Continue card (or one clear first step for a new user), today's strip (streak, goal, % of the Quran), today's plan, saved places, then everything else. See [reading-plan.md](reading-plan.md) for how the plan works and what it cannot do.

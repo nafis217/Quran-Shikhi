@@ -37,7 +37,7 @@ export const CONSONANTS: Readonly<Record<string, Consonant>> = {
   'م': { bn: 'ম', latin: 'm' },
   'ن': { bn: 'ন', latin: 'n' },
   'ه': { bn: 'হ', latin: 'h' },
-  'ة': { bn: 'ত', latin: 't' },
+  'ة': { bn: 'ত', latin: 't' }, // with a vowel mark it is a "t"; unmarked at the end of a word it is a soft "h" (see engine.ts)
   'و': { bn: 'ওয়', latin: 'w' },
   'ي': { bn: 'য়', latin: 'y' },
   'ی': { bn: 'য়', latin: 'y' },

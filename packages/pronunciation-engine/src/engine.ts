@@ -123,6 +123,9 @@ export function transliterateWord(word: string): WordResult {
       continue;
     }
 
+    // Word-final tā marbūṭa with no vowel (an everyday word said on its own, e.g. قِطَّة) is a soft "h", not a "t".
+    if (ch === 'ة' && i === units.length - 1 && hasNoMarks(u)) { coda({ bn: 'হ্', latin: 'h' }); continue; }
+
     const c = CONSONANTS[ch];
     if (!c) continue;
     onsetOrCoda(u, c);

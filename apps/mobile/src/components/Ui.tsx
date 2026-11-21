@@ -14,7 +14,7 @@ export function Btn({ label, onPress, disabled, kind = 'normal', a11y }: { label
   const fg = kind === 'primary' ? c.onAccent : kind === 'ghost' ? c.text : c.accent;
   return (
     <Pressable accessibilityRole="button" accessibilityLabel={a11y ?? label} accessibilityState={{ disabled: !!disabled }} disabled={disabled} onPress={onPress}
-      style={{ minHeight: 44, minWidth: 44, paddingHorizontal: 14, justifyContent: 'center', alignItems: 'center', borderRadius: 10, borderWidth: 1, borderColor: kind === 'ghost' ? c.line : c.accent, backgroundColor: bg, opacity: disabled ? 0.55 : 1, marginRight: 8, marginVertical: 4 }}>
+      style={{ minHeight: 44, minWidth: 44, paddingHorizontal: 14, justifyContent: 'center', alignItems: 'center', borderRadius: 22, borderWidth: 1, borderColor: kind === 'ghost' ? c.line : c.accent, backgroundColor: bg, opacity: disabled ? 0.55 : 1, marginRight: 8, marginVertical: 4 }}>
       <Text style={{ color: fg, fontFamily: 'NotoSansBengali_400Regular', fontSize: 15 * fontScale }}>{label}</Text>
     </Pressable>
   );
@@ -22,7 +22,7 @@ export function Btn({ label, onPress, disabled, kind = 'normal', a11y }: { label
 
 export function Card({ children }: { children: ReactNode }) {
   const { colors: c } = useSettings();
-  return <View style={{ backgroundColor: c.surface, borderColor: c.line, borderWidth: 1, borderRadius: 14, padding: 12, marginVertical: 6 }}>{children}</View>;
+  return <View style={{ backgroundColor: c.surface, borderColor: c.line, borderWidth: 1, borderRadius: 20, padding: 12, marginVertical: 6 }}>{children}</View>;
 }
 
 export function Disclaimer() {

@@ -1,15 +1,18 @@
 import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import type { Word } from '@quran-shikkha/api-client';
-import { pickByLang, pronText } from '@quran-shikkha/learning-core';
+import { meaningOf, pickByLang, pronText, vocabById, type VocabWord } from '@quran-shikkha/learning-core';
 import { api, authed } from '../api';
 import { play } from '../audio';
 import { pron } from '../pron';
+import { speakArabic } from '../speech';
+import { vocabPron } from '../vocabPron';
 import { useAsync } from '../useAsync';
 import { useSettings } from '../settings';
-import { Async, Btn, Disclaimer, T } from '../components/Ui';
+import { Async, Btn, T } from '../components/Ui';
 
-interface Card { wordKey: string; word: Word }
+/** A Quran word (key "2:255:1") or a daily word (key "v:animals.cat"). */
+interface Card { wordKey: string; word: Word | null; vocab: VocabWord | null }
 
 async function findWord(key: string): Promise<Word | null> {
   const [s, a] = key.split(':').map(Number);
@@ -26,7 +29,10 @@ export default function Flashcards() {
   const [state, retry] = useAsync(async () => {
     const rows = (((await authed(() => api.GET('/api/v1/flashcards/due'))).data ?? []) as { wordKey: string }[]);
     const out: Card[] = [];
-    for (const r of rows) { const w = await findWord(r.wordKey); if (w) out.push({ wordKey: r.wordKey, word: w }); }
+    for (const r of rows) {
+      if (r.wordKey.startsWith('v:')) { const v = vocabById(r.wordKey.slice(2)); if (v) out.push({ wordKey: r.wordKey, word: null, vocab: v }); continue; }
+      const w = await findWord(r.wordKey); if (w) out.push({ wordKey: r.wordKey, word: w, vocab: null });
+    }
     return out;
   }, []);
 
@@ -39,22 +45,25 @@ export default function Flashcards() {
   return (
     <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 80 }}>
       <T bold style={{ fontSize: 22 }}>{t('dueCards')}</T>
-      <Disclaimer />
       <Async state={state} retry={retry}>
         {(cards) => {
           const cur = cards[idx];
           if (!cur) return <T style={{ color: c.muted, textAlign: 'center' }}>{t('noDue')}</T>;
-          const w = cur.word; const p = pron(w.arabicText);
-          const meaning = pickByLang(lang, w.meaningBn, w.meaningEn);
+          const v = cur.vocab, w = cur.word;
+          const arabic = v ? v.ar : w!.arabicText;
+          const guide = v ? vocabPron(v, lang) : pronText(pron(w!.arabicText), lang);
+          const meaning = v ? meaningOf(v, lang) : pickByLang(lang, w!.meaningBn, w!.meaningEn);
           const surah = Number(cur.wordKey.split(':')[0]);
           return (
             <View style={{ alignItems: 'center', gap: 8 }}>
               <T style={{ color: c.muted }}>{idx + 1} / {cards.length}</T>
-              <T style={{ fontFamily: 'AmiriQuran_400Regular', fontSize: 56, lineHeight: 110 }}>{w.arabicText}</T>
-              {w.audioPath && <Btn label={`🔊 ${t('listen')}`} onPress={() => void play(surah, w.audioPath)} />}
+              {v && v.visual && <Text style={{ fontSize: 72 }} accessibilityLabel={v.en}>{v.emoji}</Text>}
+              <T style={{ fontFamily: 'AmiriQuran_400Regular', fontSize: 56, lineHeight: 110 }}>{arabic}</T>
+              {w?.audioPath && <Btn label={`🔊 ${t('listen')}`} onPress={() => void play(surah, w.audioPath)} />}
+              {v && <Btn label={`🔊 ${t('speak')}`} onPress={() => void speakArabic(v.ar)} />}
               {!shown ? <Btn kind="primary" label={t('showAnswer')} onPress={() => setShown(true)} /> : (
                 <>
-                  <T bold>{pronText(p, lang)}</T>
+                  <T bold>{guide}</T>
                   <T>{meaning ?? t('noMeaning')}</T>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                     <Btn label={t('again')} onPress={() => grade(cur, 1)} /><Btn label={t('hard')} onPress={() => grade(cur, 3)} />

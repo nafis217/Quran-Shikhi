@@ -16,6 +16,11 @@ const Trace = lazy(() => import('./pages/practice/Trace'));
 const Quiz = lazy(() => import('./pages/practice/Quiz'));
 const Match = lazy(() => import('./pages/practice/Match'));
 const Build = lazy(() => import('./pages/practice/Build'));
+const PlanPage = lazy(() => import('./pages/PlanPage'));
+const Learn = lazy(() => import('./pages/Learn'));
+const LearnCategory = lazy(() => import('./pages/LearnCategory'));
+const LearnPlay = lazy(() => import('./pages/LearnPlay'));
+const Watch = lazy(() => import('./pages/Watch'));
 const Write = lazy(() => import('./pages/practice/Write'));
 const TafsirPage = lazy(() => import('./pages/TafsirPage'));
 
@@ -26,13 +31,14 @@ export default function App() {
       <a className="skip" href="#main">{t('skip')}</a>
       <header className="top">
         <div className="top-inner">
-          <NavLink to="/" className="brand">{t('appName')}</NavLink>
+          <NavLink to="/" className="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="var(--ring-a)" /><stop offset="1" stopColor="var(--ring-b)" /></linearGradient></defs><path d="M16 2l4 9 9 3-9 4-4 9-4-9-9-4 9-3z" fill="url(#bm)" /><circle cx="16" cy="16" r="2.6" fill="var(--surface)" /></svg>{t('appName')}</NavLink>
           <nav aria-label="main" className="nav">
             <NavLink to="/" end>{t('home')}</NavLink>
+            <NavLink to="/plan">{t('myPlan')}</NavLink>
+            <NavLink to="/learn">{t('dailyArabic')}</NavLink>
+            <NavLink to="/watch">{t('watchRead')}</NavLink>
             <NavLink to="/practice">{t('practice')}</NavLink>
-            <NavLink to="/frequent">{t('navWords')}</NavLink>
             <NavLink to="/flashcards">{t('flashcards')}</NavLink>
-            <NavLink to="/credits">{t('credits')}</NavLink>
           </nav>
           <SettingsPanel />
         </div>
@@ -47,6 +53,11 @@ export default function App() {
             <Route path="/frequent" element={<Frequent />} />
             <Route path="/flashcards" element={<Flashcards />} />
             <Route path="/credits" element={<Credits />} />
+            <Route path="/plan" element={<PlanPage />} />
+            <Route path="/learn" element={<Learn />} />
+            <Route path="/learn/play/:game" element={<LearnPlay />} />
+            <Route path="/learn/:cat" element={<LearnCategory />} />
+            <Route path="/watch" element={<Watch />} />
             <Route path="/practice" element={<Practice />} />
             <Route path="/practice/chart" element={<Chart />} />
             <Route path="/practice/trace" element={<Trace />} />
@@ -58,7 +69,7 @@ export default function App() {
           </Routes>
         </Suspense>
       </main>
-      <footer className="foot">{t('disclaimer')}</footer>
+      <footer className="foot">{t('disclaimer')} · <NavLink to="/credits">{t('credits')}</NavLink></footer>
     </>
   );
 }

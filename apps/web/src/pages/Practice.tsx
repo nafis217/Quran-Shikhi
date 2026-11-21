@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useSettings } from '../settings';
 import type { Key } from '@quran-shikkha/learning-core';
+import { PageHero } from '../components/PageHero';
 
 const MODES: { to: string; icon: string; title: Key; desc: Key }[] = [
   { to: 'chart', icon: 'ا ب ت', title: 'pChart', desc: 'pChartDesc' },
@@ -15,8 +16,7 @@ export default function Practice() {
   const { t } = useSettings();
   return (
     <div>
-      <h1>{t('practice')}</h1>
-      <p className="hint">{t('practiceIntro')}</p>
+      <PageHero compact overline={t('practice')} title={t('practice')} sub={t('practiceIntro')} aside={<div className="hero-name-ar ar" lang="ar" aria-hidden="true">ا ب ت</div>} />
       <ul className="list">
         {MODES.map((m) => (
           <li key={m.to}>
