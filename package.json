@@ -4,5 +4,9 @@
   "scripts": {
     "test": "pnpm -r --if-present test",
     "typecheck": "pnpm -r --if-present typecheck"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0",
+    "hono": "^4.6.0"
   }
 }

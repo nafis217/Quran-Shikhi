@@ -131,3 +131,10 @@ Pure logic in `packages/learning-core/src/reading.ts` and `plan.ts` (93 tests); 
 - The backend already has guest, email+password and Google sign-in (with password hashing and rate limits), but no password reset and no client screens. They stay unused.
 
 **What to build when accounts are wanted:** Google sign-in first (no password to forget; needs only a client id), then email one-time codes (no passwords at all) once an email provider exists. Sync would upload the same notebook JSON per user, size-capped, with delete-my-data. Until then, the backup file is the "recovery" story.
+
+## 14. The TypeScript backend on Cloudflare (added)
+The API was rewritten in TypeScript (`apps/edge`, Hono) to run free on Cloudflare Pages Functions with D1 and KV, in the same project as the website (see [deploy-cloudflare.md](deploy-cloudflare.md)). The C# backend stays in `backend/` as the original and for local development.
+
+**How it was checked.** The C# tests were ported (same inputs and expected values: aligner, vowel check, SM-2, frequency track, media, news) plus API tests for every endpoint (62 tests). `apps/edge/scripts/compare-with-csharp.mjs` sends the same requests to both backends and compares status and body: 200 of 210 requests were identical on the full data; the 10 differences are (a) the C# backend returning no tafsir for some ayahs because a per-ayah upstream request failed, where the TypeScript backend has the text (187 of 187 sampled texts equal the source files), (b) the `traceId` the C# error bodies carry, and (c) the speech model being reachable only from the C# run on this machine.
+
+**Deliberate differences.** Email/password and Google sign-in endpoints were not ported (no screen uses them; password hashing is also too expensive for the free CPU limit). An ayah number past the end of a surah gives 404 (C# returned 200 with empty parts). Tafsir files come from jsDelivr with GitHub's raw host as fallback, because jsDelivr refuses some large files. The per-visitor rate limit is best-effort (per server instance).

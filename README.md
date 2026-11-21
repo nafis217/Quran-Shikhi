@@ -35,3 +35,16 @@ Start the backend, then: `cd packages/api-client && pnpm fetch-spec && pnpm gene
 ## Real Quran Foundation data
 Copy `.env.example` values into environment variables (`Qf__ClientId`, `Qf__ClientSecret`, `Qf__AuthBase`, `Qf__ApiBase`, `Qf__Environment`).
 Credentials live only on the backend. Production also needs `Jwt__Key` and a SQL Server connection string; apply migrations with `dotnet ef database update`.
+
+## Published version (Cloudflare, free)
+The website and the API are one Cloudflare Pages project: the React app in `apps/web`, and the TypeScript API in `apps/edge`
+(served from `functions/api/[[route]].ts`, data in a D1 database). The C# backend in `backend/` is the original and still works
+for local development; the TypeScript one is checked against it (`apps/edge/scripts/compare-with-csharp.mjs`).
+
+```bash
+pnpm -C apps/edge test                       # API tests (no Cloudflare needed)
+pnpm -C apps/web build && pnpm exec wrangler pages dev --port 8788    # whole site + API locally, empty database
+curl -X POST http://127.0.0.1:8788/api/v1/admin/claim                 # once per fresh database: prints the admin key
+node --experimental-strip-types apps/edge/scripts/seed.ts --url http://127.0.0.1:8788 --key <admin key>   # load all 114 surahs (~15 min)
+```
+See [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md) for publishing and updating.

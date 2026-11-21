@@ -25,3 +25,6 @@ dist/
 
 .venv/
 __pycache__/
+
+# Cloudflare local state
+.wrangler/
