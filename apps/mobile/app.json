@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Quran Shikkha",
+    "slug": "quran-shikkha",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "ios": { "supportsTablet": true, "bundleIdentifier": "app.quranshikkha.mobile" },
+    "android": { "package": "app.quranshikkha.mobile" },
+    "plugins": ["expo-font", "expo-secure-store"]
+  }
+}

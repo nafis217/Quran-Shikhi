@@ -1,0 +1,27 @@
+# secrets
+.env
+.env.*
+!.env.example
+*.pfx
+secrets.json
+# QF / third-party content must never be committed (see docs/data-licenses.md)
+/backend/**/cache/
+/content/qf-cache/
+/content/raw/
+*.qf.json
+# build
+node_modules/
+dist/
+bin/
+obj/
+.expo/
+*.log
+.DS_Store
+
+dev.db*
+
+dist/
+.expo/
+
+.venv/
+__pycache__/

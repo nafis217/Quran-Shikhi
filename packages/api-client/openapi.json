@@ -1,0 +1,1609 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "QuranShikkha.Api | v1",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5038/"
+    }
+  ],
+  "paths": {
+    "/api/v1/auth/guest": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CredentialsRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CredentialsRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CredentialsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CredentialsRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CredentialsRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CredentialsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/google": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/surahs": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChapterDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChapterDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChapterDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/surahs/{n}/ayahs": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "parameters": [
+          {
+            "name": "n",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AyahDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AyahDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AyahDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/surahs/{n}/translations": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "parameters": [
+          {
+            "name": "n",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurahTexts"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurahTexts"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurahTexts"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/surahs/{n}/tafsir": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "parameters": [
+          {
+            "name": "n",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurahTexts"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurahTexts"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurahTexts"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ayahs/{surah}:{ayah}/details": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "parameters": [
+          {
+            "name": "surah",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "ayah",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AyahDetailsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AyahDetailsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AyahDetailsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tracks/frequent": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "parameters": [
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 300
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/FrequencyTrackDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FrequencyTrackDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FrequencyTrackDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credits": {
+      "get": {
+        "tags": [
+          "Content"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Credits"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Credits"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Credits"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recitation/capabilities": {
+      "get": {
+        "tags": [
+          "Recitation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecitationCapabilities"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecitationCapabilities"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecitationCapabilities"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recitation/compare": {
+      "post": {
+        "tags": [
+          "Recitation"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecitationRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecitationRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecitationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecitationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecitationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecitationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recitation/check-audio": {
+      "post": {
+        "tags": [
+          "Recitation"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "ayahKey": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "file": {
+                        "$ref": "#/components/schemas/IFormFile"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AudioCheckResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AudioCheckResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AudioCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lessons": {
+      "get": {
+        "tags": [
+          "Lessons"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/lessons/{id}": {
+      "get": {
+        "tags": [
+          "Lessons"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/progress": {
+      "get": {
+        "tags": [
+          "UserData"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/progress/{lessonId}": {
+      "put": {
+        "tags": [
+          "UserData"
+        ],
+        "parameters": [
+          {
+            "name": "lessonId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProgressRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProgressRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProgressRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/flashcards": {
+      "post": {
+        "tags": [
+          "UserData"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCardRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCardRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCardRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/flashcards/due": {
+      "get": {
+        "tags": [
+          "UserData"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/flashcards/review": {
+      "post": {
+        "tags": [
+          "UserData"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/flashcards/export-keys": {
+      "get": {
+        "tags": [
+          "UserData"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/reports": {
+      "post": {
+        "tags": [
+          "Reports"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddCardRequest": {
+        "required": [
+          "wordKey"
+        ],
+        "type": "object",
+        "properties": {
+          "wordKey": {
+            "type": "string"
+          }
+        }
+      },
+      "AudioCheckResponse": {
+        "required": [
+          "transcript",
+          "result"
+        ],
+        "type": "object",
+        "properties": {
+          "transcript": {
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/RecitationResult"
+          }
+        }
+      },
+      "AuthResponse": {
+        "required": [
+          "token",
+          "userId",
+          "isGuest",
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "isGuest": {
+            "type": "boolean"
+          },
+          "email": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "AyahDetailsDto": {
+        "required": [
+          "key",
+          "translationBn",
+          "translationEn",
+          "tafsirBn",
+          "context",
+          "audioUrl",
+          "reciter"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "translationBn": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TextSource"
+              }
+            ]
+          },
+          "translationEn": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TextSource"
+              }
+            ]
+          },
+          "tafsirBn": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TafsirDto"
+              }
+            ]
+          },
+          "context": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ContextCardDto"
+              }
+            ]
+          },
+          "audioUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "reciter": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "arabicText": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "tafsirEn": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TafsirDto"
+              }
+            ]
+          },
+          "tafsirAr": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TafsirDto"
+              }
+            ]
+          },
+          "revelation": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/TafsirDto"
+              }
+            ]
+          }
+        }
+      },
+      "AyahDto": {
+        "required": [
+          "key",
+          "surah",
+          "ayah",
+          "words"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "surah": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ayah": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "words": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WordDto"
+            }
+          }
+        }
+      },
+      "AyahText": {
+        "required": [
+          "ayah",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "ayah": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "ChapterDto": {
+        "required": [
+          "id",
+          "nameSimple",
+          "nameArabic",
+          "translatedName",
+          "versesCount"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nameSimple": {
+            "type": "string"
+          },
+          "nameArabic": {
+            "type": "string"
+          },
+          "translatedName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "versesCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ContextCardDto": {
+        "required": [
+          "source",
+          "textBn",
+          "textEn"
+        ],
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "textBn": {
+            "type": "string"
+          },
+          "textEn": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "CredentialsRequest": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "Credit": {
+        "required": [
+          "name",
+          "what",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "what": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "Credits": {
+        "required": [
+          "sources",
+          "reciter",
+          "disclaimer"
+        ],
+        "type": "object",
+        "properties": {
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Credit"
+            }
+          },
+          "reciter": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "disclaimer": {
+            "type": "string"
+          }
+        }
+      },
+      "Finding": {
+        "required": [
+          "type",
+          "expected",
+          "heard",
+          "letter",
+          "index"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "expected": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "heard": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "letter": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "FrequencyTrackDto": {
+        "required": [
+          "totalWordTokens",
+          "distinctWords",
+          "words",
+          "coveragePercent",
+          "scope"
+        ],
+        "type": "object",
+        "properties": {
+          "totalWordTokens": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "distinctWords": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "words": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FrequentWordDto"
+            }
+          },
+          "coveragePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "scope": {
+            "type": "string"
+          }
+        }
+      },
+      "FrequentWordDto": {
+        "required": [
+          "rank",
+          "arabicText",
+          "count",
+          "cumulativeCoveragePercent",
+          "exampleKey",
+          "meaningBn",
+          "audioPath"
+        ],
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "arabicText": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cumulativeCoveragePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "exampleKey": {
+            "type": "string"
+          },
+          "meaningBn": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "audioPath": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "meaningEn": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "GoogleRequest": {
+        "required": [
+          "idToken"
+        ],
+        "type": "object",
+        "properties": {
+          "idToken": {
+            "type": "string"
+          }
+        }
+      },
+      "IFormFile": {
+        "type": "string",
+        "format": "binary"
+      },
+      "ProgressRequest": {
+        "required": [
+          "completedItems"
+        ],
+        "type": "object",
+        "properties": {
+          "completedItems": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RecitationCapabilities": {
+        "required": [
+          "serverAsr"
+        ],
+        "type": "object",
+        "properties": {
+          "serverAsr": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RecitationRequest": {
+        "required": [
+          "ayahKey",
+          "transcript"
+        ],
+        "type": "object",
+        "properties": {
+          "ayahKey": {
+            "type": "string"
+          },
+          "transcript": {
+            "type": "string"
+          }
+        }
+      },
+      "RecitationResult": {
+        "required": [
+          "score",
+          "words",
+          "extraWords"
+        ],
+        "type": "object",
+        "properties": {
+          "score": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "words": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WordCheck"
+            }
+          },
+          "extraWords": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "vowelsChecked": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "ReportRequest": {
+        "required": [
+          "targetType",
+          "targetId",
+          "note"
+        ],
+        "type": "object",
+        "properties": {
+          "targetType": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "ReviewRequest": {
+        "required": [
+          "wordKey",
+          "quality"
+        ],
+        "type": "object",
+        "properties": {
+          "wordKey": {
+            "type": "string"
+          },
+          "quality": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SurahTexts": {
+        "required": [
+          "language",
+          "source",
+          "version",
+          "attribution",
+          "ayahs"
+        ],
+        "type": "object",
+        "properties": {
+          "language": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "version": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "attribution": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "ayahs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AyahText"
+            }
+          }
+        }
+      },
+      "TafsirDto": {
+        "required": [
+          "resourceId",
+          "name",
+          "attribution",
+          "text",
+          "hasPlaceholder"
+        ],
+        "type": "object",
+        "properties": {
+          "resourceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "attribution": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "text": {
+            "type": "string"
+          },
+          "hasPlaceholder": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TextSource": {
+        "required": [
+          "text",
+          "source",
+          "version",
+          "attribution"
+        ],
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "version": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "attribution": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "WordCheck": {
+        "required": [
+          "position",
+          "expected",
+          "heard",
+          "status",
+          "similarity"
+        ],
+        "type": "object",
+        "properties": {
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "expected": {
+            "type": "string"
+          },
+          "heard": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/WordStatus"
+          },
+          "similarity": {
+            "type": "number",
+            "format": "double"
+          },
+          "findings": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/Finding"
+            }
+          }
+        }
+      },
+      "WordDto": {
+        "required": [
+          "key",
+          "position",
+          "arabicText",
+          "audioPath",
+          "meaningBn",
+          "meaningEn",
+          "translitLatin",
+          "charType"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "arabicText": {
+            "type": "string"
+          },
+          "audioPath": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "meaningBn": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "meaningEn": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "translitLatin": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "charType": {
+            "type": "string"
+          }
+        }
+      },
+      "WordStatus": {
+        "enum": [
+          "Correct",
+          "Vowel",
+          "Close",
+          "Wrong",
+          "Missing"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Auth"
+    },
+    {
+      "name": "Content"
+    },
+    {
+      "name": "Recitation"
+    },
+    {
+      "name": "Lessons"
+    },
+    {
+      "name": "UserData"
+    },
+    {
+      "name": "Reports"
+    }
+  ]
+}

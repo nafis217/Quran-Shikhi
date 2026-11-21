@@ -1,0 +1,8 @@
+{
+  "name": "quran-shikkha",
+  "private": true,
+  "scripts": {
+    "test": "pnpm -r --if-present test",
+    "typecheck": "pnpm -r --if-present typecheck"
+  }
+}

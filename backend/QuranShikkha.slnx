@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/QuranShikkha.Api/QuranShikkha.Api.csproj" />
+    <Project Path="src/QuranShikkha.Core/QuranShikkha.Core.csproj" />
+    <Project Path="src/QuranShikkha.Infrastructure/QuranShikkha.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/QuranShikkha.Tests/QuranShikkha.Tests.csproj" />
+  </Folder>
+</Solution>
