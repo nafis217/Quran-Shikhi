@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react';
-import { NavLink, Route, Routes } from 'react-router-dom';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { useSettings } from './settings';
 import { SettingsPanel } from './components/SettingsPanel';
 import { Loading } from './components/States';
@@ -26,13 +26,23 @@ const TafsirPage = lazy(() => import('./pages/TafsirPage'));
 
 export default function App() {
   const { t } = useSettings();
+  const [menu, setMenu] = useState(false);
+  const { pathname } = useLocation();
+  useEffect(() => setMenu(false), [pathname]); // close the menu after choosing a page
+  useEffect(() => {
+    if (!menu) return;
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenu(false); };
+    window.addEventListener('keydown', esc);
+    return () => window.removeEventListener('keydown', esc);
+  }, [menu]);
   return (
     <>
       <a className="skip" href="#main">{t('skip')}</a>
       <header className="top">
         <div className="top-inner">
           <NavLink to="/" className="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="var(--ring-a)" /><stop offset="1" stopColor="var(--ring-b)" /></linearGradient></defs><path d="M16 2l4 9 9 3-9 4-4 9-4-9-9-4 9-3z" fill="url(#bm)" /><circle cx="16" cy="16" r="2.6" fill="var(--surface)" /></svg>{t('appName')}</NavLink>
-          <nav aria-label="main" className="nav">
+          <button type="button" className="menu-btn" aria-expanded={menu} aria-controls="main-nav" aria-label={t('menu')} onClick={() => setMenu((v) => !v)}><span /><span /><span /></button>
+          <nav aria-label="main" className={`nav${menu ? ' open' : ''}`} id="main-nav">
             <NavLink to="/" end>{t('home')}</NavLink>
             <NavLink to="/plan">{t('myPlan')}</NavLink>
             <NavLink to="/learn">{t('dailyArabic')}</NavLink>
