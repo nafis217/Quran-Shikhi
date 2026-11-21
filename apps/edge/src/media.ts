@@ -1,4 +1,4 @@
-import raw from '../../../backend/src/QuranShikkha.Api/Content/media.json' with { type: 'json' };
+import raw from '../../../backend/src/QuranShikkha.Api/Content/media.json';
 
 export interface MediaItem { id: string; platform: string; videoId: string; title: string; channel: string; age: string; topic: string }
 const VIDEO_ID = /^[A-Za-z0-9_-]{11}$/;

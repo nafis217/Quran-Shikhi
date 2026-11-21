@@ -29,7 +29,7 @@ details are put together as text (no parsing of the long tafsirs). The frequent-
 
 ## Limits to know (free plan)
 - 100,000 requests/day for the site's API, 5 million D1 row reads and 100,000 row writes per day, 100,000 KV reads and 1,000 KV writes per day.
-- 10 ms CPU per request. `apps/edge/scripts/cpu-check.ts` estimates each endpoint; the dashboard's metrics show the real numbers after launch.
+- 10 ms CPU per request. `CPU_CHECK_DB=<seeded sqlite> pnpm -C apps/edge test cpu.manual` estimates each endpoint; the dashboard's metrics show the real numbers after launch.
 - No speech model online: the reading-check microphone button hides itself when `/api/v1/recitation/capabilities` says no.
 - Progress and flashcards are stored in D1 per guest account; clearing the browser loses the guest token (same as before).
 - Rate limiting inside the app is best-effort (per server instance). Add a Cloudflare rate-limiting rule if the site is ever public.

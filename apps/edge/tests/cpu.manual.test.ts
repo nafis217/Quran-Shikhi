@@ -1,12 +1,15 @@
+import { describe, it } from 'vitest';
+import { app } from '../src/app.ts';
+import { fakeD1 } from './d1.ts';
+
 /**
  * Rough CPU cost of each endpoint on a seeded database file (the free plan allows 10 ms CPU per request).
- *   node --experimental-strip-types scripts/cpu-check.ts /path/to/seeded.sqlite
- * Measured in Node with warm and cold runs; Cloudflare's own CPU numbers are visible in the dashboard's Functions metrics.
+ *   CPU_CHECK_DB=/path/to/seeded.sqlite pnpm test cpu.manual
+ * Measured in Node, so database reads count here but are only waiting time on Cloudflare; the dashboard shows the real numbers.
  */
-import { app } from '../src/app.ts';
-import { fakeD1 } from '../tests/d1.ts';
-
-const env = { DB: fakeD1(process.argv[2] ?? '/tmp/cpu-test.sqlite') };
+describe.runIf(process.env['CPU_CHECK_DB'])('cpu check', () => {
+  it('prints the cost of each endpoint', async () => {
+const env = { DB: fakeD1(process.env['CPU_CHECK_DB']!) };
 const paths: [string, RequestInit?][] = [
   ['/surahs'], ['/surahs/1/ayahs'], ['/surahs/2/ayahs'], ['/surahs/3/ayahs'], ['/surahs/2/translations?lang=bn'], ['/surahs/2/tafsir?lang=bn'], ['/surahs/2/tafsir?lang=en'],
   ['/ayahs/2:255/details'], ['/ayahs/1:1/details'], ['/tracks/frequent?size=300'], ['/tracks/frequent?size=1000'], ['/lessons'], ['/lessons/2'],
@@ -24,3 +27,5 @@ for (const [p, init] of paths) {
   }
   console.log(`${p.padEnd(38)} ${status} ${String(Math.round(bytes / 1024)).padStart(5)} KB   first ${times[0]!.toFixed(1).padStart(5)} ms   warm ${Math.min(...times.slice(1)).toFixed(1).padStart(5)} ms`);
 }
+  }, 120_000);
+});
