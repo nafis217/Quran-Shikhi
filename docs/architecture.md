@@ -121,3 +121,13 @@ Writing feedback (heatmap and hints) and a reading check (speech-to-text compare
 
 ## 12. Saving your place, progress and the reading plan (added)
 Pure logic in `packages/learning-core/src/reading.ts` and `plan.ts` (93 tests); stored per device by `apps/web/src/lib/readingStore.ts` and `apps/mobile/src/readingStore.ts`. Home now answers "what do I do now?": Continue card (or one clear first step for a new user), today's strip (streak, goal, % of the Quran), today's plan, saved places, then everything else. See [reading-plan.md](reading-plan.md) for how the plan works and what it cannot do.
+
+## 13. Writing notebook and the login decision (added)
+**Notebook.** Free-writing is now a notebook: many pages (max 50), next/previous, new page, delete page, erase page, autosave. Pure logic in `learning-core/src/notebook.ts` (tested, including garbage and oversized imports); stored in the browser (`qs.notebook`). A backup file (JSON, drawings only) moves it between devices.
+
+**Login: decided not to build it now.** Reasons:
+- Forgotten passwords need a way to prove who you are. That means sending email (an email provider, a sending domain, spam/abuse handling) or SMS for phone-number login (paid, and phone numbers are personal data). We have neither, and a half-built reset flow is a security hole.
+- Handwriting of children would then live on our server, which brings privacy and data-retention duties we do not need yet.
+- The backend already has guest, email+password and Google sign-in (with password hashing and rate limits), but no password reset and no client screens. They stay unused.
+
+**What to build when accounts are wanted:** Google sign-in first (no password to forget; needs only a client id), then email one-time codes (no passwords at all) once an email provider exists. Sync would upload the same notebook JSON per user, size-capped, with delete-my-data. Until then, the backup file is the "recovery" story.

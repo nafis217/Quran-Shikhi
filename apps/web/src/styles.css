@@ -546,3 +546,9 @@ a.b:hover::after { transform: scale(1.25); }
 .task .box { border-radius: 50%; }
 .status { box-shadow: 0 1px 0 rgba(255, 255, 255, .4) inset; }
 @media (max-width: 44rem) { .page-hero.compact { grid-template-columns: 1fr; } .page-hero .hero2-side { flex-direction: row; justify-content: flex-start; } }
+
+/* 18. Notebook page bar (Write practice) */
+.page-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 8px 0; }
+.page-bar strong { min-width: 7.5em; text-align: center; }
+.page-bar .save-state { margin-inline-start: auto; }
+.page-bar .save-state.bad { color: var(--danger, #b3261e); font-weight: 700; }

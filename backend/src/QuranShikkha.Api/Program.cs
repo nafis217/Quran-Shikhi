@@ -77,9 +77,10 @@ app.UseExceptionHandler(a => a.Run(async ctx =>
     await ctx.Response.WriteAsJsonAsync(new ProblemDetails { Status = (int)status, Title = title });
 }));
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment()) app.MapOpenApi();
+// Create / migrate the database and seed our own lesson data on every start (dev and production; tests set up their own).
+if (!app.Environment.IsEnvironment("Testing"))
 {
-    app.MapOpenApi();
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     if (string.Equals(builder.Configuration["Database:Provider"], "Sqlite", StringComparison.OrdinalIgnoreCase)) await db.Database.EnsureCreatedAsync();
@@ -87,6 +88,7 @@ if (app.Environment.IsDevelopment())
     await DbSeeder.SeedAsync(db);
 }
 
+app.UseForwardedHeaders(new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions { ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto }); // behind the host's proxy: real client IP for rate limits
 app.UseRateLimiter();
 app.UseCors();
 app.UseAuthentication();
